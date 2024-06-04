@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {BsPencil} from "react-icons/bs";
 import {FiShoppingBag} from "react-icons/fi";
+import Login from "./Login";
 
 export default function Navbar() {
     return (
@@ -15,7 +16,7 @@ export default function Navbar() {
                 <Link to='/products'>Products</Link>
                 <Link to='/carts'>Carts</Link>
                 <Link to='/products/new' className="text-2xl"><BsPencil/></Link>
-                <Link to='/'>Login</Link>
+                <Login/>
             </nav>
         </header>
     );
