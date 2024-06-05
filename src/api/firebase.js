@@ -1,31 +1,24 @@
-import {getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged} from "firebase/auth";
-import {initializeApp} from "firebase/app";
+import {getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
+import {app} from "./firebase_config";
+import {adminUser} from "./database";
 
-const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTO_DOMAIN,
-    databaseURL: process.env.REACT_APP_FIREBASE_DB_URL,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID
-};
-
-const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export {auth, provider};
 
-function login() {
-    signInWithPopup(auth, provider).catch(console.error);
+export function login() {
+    signInWithPopup(auth, provider)
+        .catch(console.error);
 }
 
-function logout() {
+export function logout() {
     signOut(auth);
 }
 
-function onUserStateChange(callback) {
-    onAuthStateChanged(auth, (user) => {
-        callback(user);
+export function onUserStateChange(callback) {
+    onAuthStateChanged(auth, async (user) => {
+        const updatedUser = user ? await adminUser(user) : null;
+        callback(updatedUser);
     });
 }
-
-export {login, logout, onUserStateChange};
