@@ -1,18 +1,14 @@
-// Import the functions you need from the SDKs you need
-import {logout, login, onUserStateChange} from '../api/firebase'
-import {useEffect, useState} from "react";
+import React from "react";
 import User from "./User";
+import {useAuthContext} from "../context/AuthContext";
+import Button from "./ui/Button";
 
 export default function Login() {
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        onUserStateChange(setUser);
-    }, []);
+    const {user, login, logout} = useAuthContext();
 
     return (<>
         {user && <User user={user}/>}
-        {!user && <button onClick={login}>Login</button>}
-        {user && <button onClick={logout}>Logout</button>}
+        {!user && <Button onClick={login} text={'Login'}/>}
+        {user && <Button onClick={logout} text={'Logout'}/>}
     </>);
 }
