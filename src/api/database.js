@@ -1,5 +1,6 @@
-import {get, getDatabase, ref} from "firebase/database";
+import {get, getDatabase, ref, set} from "firebase/database";
 import {app} from "./firebase_config";
+import {v4 as uuid} from "uuid";
 
 const database = getDatabase(app);
 
@@ -17,3 +18,16 @@ export async function adminUser(user) {
         return user;
     })
 }
+
+// 소켓 통신
+export async function addNewProduct(product, image) {
+    const id = uuid();
+    return await set(ref(database, `products/${id}`), {
+        ...product,
+        id,
+        price : parseInt(product.price),
+        image,
+        options: product.options.split(",")
+    });
+}
+

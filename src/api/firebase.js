@@ -1,7 +1,6 @@
 import {getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
 import {app} from "./firebase_config";
 import {adminUser} from "./database";
-
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
@@ -22,3 +21,4 @@ export function onUserStateChange(callback) {
         callback(updatedUser);
     });
 }
+
