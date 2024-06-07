@@ -8,15 +8,15 @@ export async function adminUser(user) {
     return get(ref(database, 'admins'))
         .then((snapshot) => {
 
-        if(snapshot.exists()) {
-            const admins = snapshot.val();
-            const isAdmin = admins.includes(user.uid);
+            if (snapshot.exists()) {
+                const admins = snapshot.val();
+                const isAdmin = admins.includes(user.uid);
 
-            return {...user, isAdmin};
-        }
+                return {...user, isAdmin};
+            }
 
-        return user;
-    })
+            return user;
+        })
 }
 
 // 소켓 통신
@@ -25,9 +25,18 @@ export async function addNewProduct(product, image) {
     return await set(ref(database, `products/${id}`), {
         ...product,
         id,
-        price : parseInt(product.price),
+        price: parseInt(product.price),
         image,
         options: product.options.split(",")
     });
 }
 
+export async function getProducts() {
+    return get(ref(database, 'products')).then(snapshot => {
+        if (snapshot.exists()) {
+            return Object.values(snapshot.val());
+        }
+
+        return [];
+    });
+}
