@@ -1,16 +1,9 @@
 import React from 'react';
-import {useQuery} from "@tanstack/react-query";
-import {getProducts} from "../api/database";
 import ProductCard from "./ProductCard";
+import useProducts from "../hooks/useProducts";
 
 export default function Products() {
-    const {isLoading, error, data: products} = useQuery({
-        queryKey: ['products'],
-        queryFn: () => getProducts()
-    });
-
-    console.log("확인용=============")
-    console.log(products);
+    const {productsQuery: {isLoading, error, data: products}} = useProducts(); // custom hook
 
     return <>
         {isLoading && <p>Loading...</p>}

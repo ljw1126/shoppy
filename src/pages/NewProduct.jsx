@@ -1,36 +1,38 @@
 import React, {useState} from "react";
 import {uploadImage} from "../api/uploader";
-import {addNewProduct} from "../api/database";
 import Button from "../components/ui/Button";
+import useProducts from "../hooks/useProducts";
 
 export default function NewProduct() {
     const [product, setProduct] = useState({});
     const [file, setFile] = useState();
     const [isUploading, setIsUploading] = useState(false);
     const [success, setSuccess] = useState();
+    const {addProduct} = useProducts(); // custom hook
 
     const handleChange = (e) => {
         const {name, value, files} = e.target;
-        if(name === 'file') {
+        if (name === 'file') {
             setFile(files && files[0]);
             return;
         }
 
-        setProduct((product) => ({...product, [name] : value}));
+        setProduct((product) => ({...product, [name]: value}));
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsUploading(true);
 
-        uploadImage(file).then((url) => {
-            addNewProduct(product, url).then(() => {
-                setSuccess("성공적으로 제품이 추가되었습니다.");
-                setTimeout(() => {
-                    setSuccess(null);
-                }, 4000); // 4s 후 초기화
-            })
-        }).finally(() => setIsUploading(false));
+        uploadImage(file)
+            .then((url) => {
+                addProduct.mutate({product, url}, {
+                    onSuccess: () => {
+                        setSuccess("성공적으로 제품이 추가되었습니다.");
+                        setTimeout(() => setSuccess(null), 4000);
+                    }
+                });
+            }).finally(() => setIsUploading(false));
     }
 
     return (
@@ -56,19 +58,19 @@ export default function NewProduct() {
                        onChange={handleChange}
                 />
                 <input type="number"
-                           value={product.price ?? ''}
-                           name="price"
-                           placeholder={"가격"}
-                           required
-                           onChange={handleChange}
-               />
-               <input type="text"
-                     value={product.category ?? ''}
-                     name="category"
-                     placeholder={"카테고리"}
-                     required
-                     onChange={handleChange}
-               />
+                       value={product.price ?? ''}
+                       name="price"
+                       placeholder={"가격"}
+                       required
+                       onChange={handleChange}
+                />
+                <input type="text"
+                       value={product.category ?? ''}
+                       name="category"
+                       placeholder={"카테고리"}
+                       required
+                       onChange={handleChange}
+                />
                 <input type="text"
                        value={product.description ?? ''}
                        name="description"
